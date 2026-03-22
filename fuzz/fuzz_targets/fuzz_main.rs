@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
 #![no_main]
 use libfuzzer_sys::fuzz_target;
 
