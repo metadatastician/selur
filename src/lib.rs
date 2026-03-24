@@ -106,7 +106,7 @@ impl std::fmt::Display for StatusCode {
 /// Vörðr HTTP client configuration.
 #[derive(Debug, Clone)]
 pub struct VordrConfig {
-    /// Base URL for the Vörðr REST API (e.g. "http://127.0.0.1:4000").
+    /// Base URL for the Vörðr REST API (e.g. "http://127.0.0.1:4010").
     pub base_url: String,
     /// Request timeout in seconds.
     pub timeout_secs: u64,
@@ -116,7 +116,7 @@ impl Default for VordrConfig {
     fn default() -> Self {
         Self {
             base_url: std::env::var("VORDR_ENDPOINT")
-                .unwrap_or_else(|_| "http://127.0.0.1:4000".to_string()),
+                .unwrap_or_else(|_| "http://127.0.0.1:4010".to_string()),
             timeout_secs: 10,
         }
     }
@@ -478,7 +478,7 @@ mod tests {
     fn test_vordr_config_default() {
         let config = VordrConfig::default();
         assert_eq!(config.timeout_secs, 10);
-        // base_url comes from env or defaults to localhost:4000
+        // base_url comes from env or defaults to localhost:4010
     }
 
     #[test]
