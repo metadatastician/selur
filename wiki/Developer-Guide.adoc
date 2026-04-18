@@ -105,7 +105,7 @@ selur/
 │
 ├── wiki/                 # User and developer wiki
 │
-├── justfile              # Task definitions
+├── Justfile              # Task definitions
 ├── Cargo.toml            # Rust package config
 ├── README.adoc           # Project readme
 ├── ROADMAP.adoc          # Development roadmap

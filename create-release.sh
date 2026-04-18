@@ -42,7 +42,7 @@ cp -r examples dist/${RELEASE_DIR}/
 cp README.adoc ROADMAP.adoc LICENSE dist/${RELEASE_DIR}/
 cp RELEASE-NOTES-v1.0.0.md dist/${RELEASE_DIR}/
 cp ECOSYSTEM.scm META.scm STATE.scm dist/${RELEASE_DIR}/
-cp justfile Cargo.toml dist/${RELEASE_DIR}/
+cp Justfile Cargo.toml dist/${RELEASE_DIR}/
 
 # Create tarball
 cd dist

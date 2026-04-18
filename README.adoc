@@ -193,7 +193,7 @@ selur/
 ├── docs/
 │   ├── ARCHITECTURE.adoc   # Design documentation
 │   └── INTEGRATION.adoc    # Integration guide
-├── justfile
+├── Justfile
 ├── Cargo.toml
 └── README.adoc
 ----
