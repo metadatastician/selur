@@ -3,6 +3,7 @@
 #
 # AGENTIC.a2ml — AI agent constraints and capabilities
 [metadata]
+project = "selur"
 version = "0.1.0"
 last-updated = "2026-04-11"
 

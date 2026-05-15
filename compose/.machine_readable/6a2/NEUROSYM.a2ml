@@ -3,6 +3,7 @@
 #
 # NEUROSYM.a2ml — Neurosymbolic integration metadata
 [metadata]
+project = "selur"
 version = "0.1.0"
 last-updated = "2026-04-11"
 

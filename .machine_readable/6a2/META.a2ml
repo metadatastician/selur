@@ -3,6 +3,7 @@
 #
 # META.a2ml — Selur meta-level information
 [metadata]
+project = "selur"
 version = "1.0.0"
 last-updated = "2026-04-11"
 
