@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 //! `selur-compose cp` command implementation
 //!
 //! Copy files to or from running containers via Vordr.

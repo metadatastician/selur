@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 //! `selur-compose create` command implementation
 //!
 //! Creates containers for all services without starting them. Useful for

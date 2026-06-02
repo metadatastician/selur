@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 //! `selur-compose pause` and `selur-compose unpause` command implementations
 //!
 //! Pauses and unpauses running containers via the Vordr container runtime.

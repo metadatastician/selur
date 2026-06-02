@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # Complete verified container stack: svalinn + vordr + cerro-torre
 
 # ============================================================

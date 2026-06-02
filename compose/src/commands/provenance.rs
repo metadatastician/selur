@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 //! `selur-compose provenance` command implementation
 //!
 //! Shows the SLSA provenance chain for service images using Cerro Torre.

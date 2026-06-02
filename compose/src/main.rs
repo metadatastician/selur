@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 //! selur-compose - Multi-container orchestration for verified containers
 //!
 //! This is the main CLI entry point. It coordinates:

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // Deno FFI wrapper for selur Rust bridge
 // This is the low-level JS glue - application code should use Selur.res
 

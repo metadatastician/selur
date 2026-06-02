@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 //! `selur-compose config` command implementation
 //!
 //! Validates the compose file and displays the resolved (merged) configuration.
