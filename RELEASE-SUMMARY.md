@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MPL-2.0 -->
 # selur v1.0.0 Release Summary
 
 **Date:** 2026-01-25  

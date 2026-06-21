@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MPL-2.0
 = Contributing to selur
 :toc:
 :toclevels: 3

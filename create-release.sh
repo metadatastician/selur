@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: MPL-2.0
 # Script to create selur v1.0.0 release artifacts
 set -e
 

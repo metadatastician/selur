@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MPL-2.0
 = Compose Parity Example
 
 This example exercises the Phase A parity path: networks, volumes, ports, and health checks.

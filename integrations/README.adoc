@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MPL-2.0
 = selur Integration Examples
 :toc:
 :toclevels: 2

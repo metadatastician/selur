@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MPL-2.0
 = Svalinn Integration - ReScript Bindings for selur
 :toc:
 :toclevels: 3

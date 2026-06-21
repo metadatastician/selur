@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MPL-2.0 -->
 # selur-compose Development Progress
 
 ## Compose Parity Plan

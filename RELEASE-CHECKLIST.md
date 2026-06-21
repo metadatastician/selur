@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MPL-2.0 -->
 # selur v1.0.0 Release Checklist
 
 ## Pre-Release ✅
