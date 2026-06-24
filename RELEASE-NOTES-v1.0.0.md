@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MPL-2.0 -->
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
 # selur v1.0.0 Release Notes
 
 **Release Date:** 2026-01-25
