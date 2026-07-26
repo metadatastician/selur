@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run Hypatia scan
-        uses: hyperpolymath/hypatia-action@main
+        uses: hyperpolymath/hypatia-action@c4e1b5b3631f9d897c230c9d43b0b8e3f43e9a4f # main
         with:
           scan-depth: full
           report-format: sarif
