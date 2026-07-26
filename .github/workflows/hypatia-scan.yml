@@ -11,6 +11,7 @@ on:
     - cron: '30 5 * * 1'  # Weekly Monday 05:30 UTC
 
 permissions: read-all
+  actions: read
 
 jobs:
   hypatia-scan:
