@@ -15,7 +15,7 @@ permissions:
 jobs:
   oikosbot:
     name: Sustainability Analysis
-    timeout-minutes: 10
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/hyperpolymath/oikos:v2.0.0
