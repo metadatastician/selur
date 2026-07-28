@@ -11,7 +11,6 @@ on:
     - cron: '30 5 * * 1'  # Weekly Monday 05:30 UTC
 
 permissions: read-all
-  actions: read
 
 jobs:
   hypatia-scan:
@@ -36,7 +35,7 @@ jobs:
 
       - name: Upload SARIF results
         if: always()
-        uses: github/codeql-action/upload-sarif@b2f9ef845756500b97acbdaf5c1dd4e9c1d15734  # v3
+        uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4
         with:
           sarif_file: hypatia-results.sarif
         continue-on-error: true
