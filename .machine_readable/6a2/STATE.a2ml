@@ -1,44 +1,63 @@
 # SPDX-License-Identifier: MPL-2.0
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
-# STATE.a2ml — Selur project state
+# STATE.a2ml — Selur project state (MEASURED, not self-reported)
 [metadata]
 project = "selur"
 version = "0.1.0"
-last-updated = "2026-03-10"
+last-updated = "2026-07-28"
 status = "active"
-session = "converted from scheme — 2026-04-11"
+session = "measured audit — 2026-07-28"
+measurement-method = "file reads, builds executed, tests run; see STATUS.md"
 
 [project-context]
 name = "Selur"
-purpose = """Ephapax-linear WASM sealant - Zero-copy IPC bridge between Svalinn and Vordr"""
-completion-percentage = 65
+purpose = """Container stack orchestration (selur-compose) and inter-service transport"""
+completion-percentage = 30
+completion-basis = "measured 2026-07-28; supersedes earlier self-reported figure"
 
 [position]
-phase = "active-development"   # design | implementation | testing | maintenance | archived
+phase = "implementation"   # design | implementation | testing | maintenance | archived
 maturity = "experimental"  # experimental | alpha | beta | production | lts
 
-[route-to-mvp]
-milestones = [
-  # No milestones recorded
+[verified-working]
+items = [
+  """`cargo check --workspace --all-targets` passes on the core library""",
+  """48 tests pass, real assertions, zero `todo!()`/`unimplemented!()` across 197 functions""",
+  """`selur/zig` builds to a wasm32-freestanding artifact""",
+  """`compose/` is a genuine 30-subcommand CLI (up, down, ps, logs, exec, scale, watch, sbom, provenance, verify, policy, network, volume, ...) and its binary builds""",
+  """`compose/src/ct.rs` correctly shells out to cerro-torre's `ct` binary rather than reimplementing it""",
 ]
 
 [blockers-and-issues]
 issues = [
-  # No blockers recorded
+  """**The zero-copy premise is refuted by the code.** The README claims IPC that 'replaces serialization (e.g. JSON/HTTP)' and is '~30-50% faster'. `Cargo.toml` depends on `ureq` (HTTP client) and `serde_json`; `src/lib.rs:54` maps every command to an HTTP verb + REST path; `:119` defaults to `http://127.0.0.1:4010`.""",
+  """**The core library is only 513 lines** — the other ~8k Rust lines are `compose/` (6,503) and tests.""",
+  """`compose/` tests have not compiled since an axum major bump (`E0308` at `tests/parity_stack.rs:186`, `E0382` at `:144`).""",
+  """3 of the 4 headline Idris2 theorems are unproven holes (`bridgeCorrectness`, `bridgeSafety`, `bridgeLiveness` = `?rhs -- TODO`); `bridge` itself returns a `-- Placeholder`.""",
+  """`ephapax/*.eph` is pseudo-code — no Ephapax compiler exists anywhere; the 'Ephapax linear types' feature is unbuildable prose.""",
+  """`integrations/svalinn/` is ReScript (estate-banned) targeting a repo with zero `.res` files; `integrations/vordr/` is a Rustler NIF for `:selur_vordr` while vordr's app is `:vordr`.""",
+  """selur calls `POST /api/v1/containers` on vordr — **vordr serves no such API**.""",
+  """No build or test gate on GitHub at all.""",
 ]
 
 [critical-next-actions]
 actions = [
-  "Implement Zig runtime send_request/get_response/deallocate",
-  "Fix LICENSE with correct PMPL-1.0-or-later text",
-  "Add launcher scripts to Containerfiles",
-  "Complete selur-compose advanced features",
-  "Idris2 memory layout proofs",
-  "Idris2 protocol correctness proofs",
-  "Integration tests with real Svalinn/Vordr",
+  """RULING NEEDED (R1): what is selur — compose tool, transport, or both?""",
+  """Either implement the zero-copy transport or remove the performance claim from the README""",
+  """Fix the compose test suite (axum E0308/E0382) so it compiles again""",
+  """Discharge or delete the three Idris2 theorem holes""",
+  """Add a build/test gate — there is currently none on GitHub""",
 ]
 
+[ecosystem]
+stack = ["stapeln", "selur", "vordr", "rokur", "cerro-torre", "svalinn"]
+designer = "stapeln"
+canonical-contract = "container/stapeln/ — 8-file bundle, one file per satellite"
+contract-status = "NOT EMITTED BY STAPELN AND NOT CONSUMED BY ANY SATELLITE as of 2026-07-28"
+runtime-chain = "svalinn(443/80) -> rokur(8081) -> app; vordr watches; cerro-torre signs; selur is network driver"
+
 [maintenance-status]
-last-run-utc = "2026-03-10T00:00:00Z"
-last-result = "unknown"  # unknown | pass | warn | fail
+last-run-utc = "2026-07-28T00:00:00Z"
+last-result = "measured"  # unknown | pass | warn | fail | measured
+reference = "dev-notes/stapeln-ecosystem-COMPREHENSIVE-SITREP-2026-07-28.md"
