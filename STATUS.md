@@ -46,6 +46,25 @@
 4. Discharge or delete the three Idris2 theorem holes
 5. Add a build/test gate — there is currently none on GitHub
 
+## CI/CD status
+
+As of 2026-07-28, post-merge: **4/4 workflows parse clean**, with zero
+illegal `timeout-minutes` on reusable-call jobs and zero phantom `codeql-action` SHAs.
+(Three sweep-introduced fault classes were repaired and merged on this date — see the
+ecosystem sitrep for the taxonomy.)
+
+**Gates that genuinely enforce something:**
+
+- **None.** This repo has no build or test gate that can fail.
+
+**Gates that run but cannot fail (or check nothing):**
+
+- `codeql.yml` pinned to `language: actions` — zero application source analysed
+- **no build or test gate on GitHub at all** — the 48 passing tests are not run by CI
+
+> A gate is not done until it has been observed to **fail** on a deliberate defect.
+> Every fake gate listed above passed its own review.
+
 ## Ecosystem position
 
 This repo is part of the six-repo container stack designed by `stapeln`. The canonical
