@@ -10,32 +10,18 @@ on:
   schedule:
     - cron: '30 5 * * 1'  # Weekly Monday 05:30 UTC
 
-permissions: read-all
+# Declared at workflow level and NOT overridden on the job below. A job-level
+# block REPLACES this one, and the reusable declares
+# `actions: read / contents: read / security-events: write` — omitting any of
+# them makes the call a permission escalation, which GitHub rejects before any
+# job starts (a zero-job run that `gh pr checks` never surfaces).
+permissions:
+  actions: read
+  contents: read
+  security-events: write
 
 jobs:
-  hypatia-scan:
-    name: Neurosymbolic Security Scan
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      contents: read
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v5
-        with:
-          fetch-depth: 0
-
-      - name: Run Hypatia scan
-        uses: hyperpolymath/hypatia-action@c4e1b5b3631f9d897c230c9d43b0b8e3f43e9a4f # main
-        with:
-          scan-depth: full
-          report-format: sarif
-          fail-on-critical: true
-
-      - name: Upload SARIF results
-        if: always()
-        uses: github/codeql-action/upload-sarif@5595ccaf912efad79be6eef63a5619ff05969be3 # v4
-        with:
-          sarif_file: hypatia-results.sarif
-        continue-on-error: true
+  scan:
+    # NOTE: no `timeout-minutes` here. It is illegal on a `uses:` job and kills
+    # the workflow at parse time; the reusable sets its own (20 min).
+    uses: hyperpolymath/standards/.github/workflows/hypatia-scan-reusable.yml@bd914b34349a8ad78ba1c4e9919b60b1c9b8bd39
