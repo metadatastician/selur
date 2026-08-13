@@ -24,4 +24,4 @@ jobs:
   scan:
     # NOTE: no `timeout-minutes` here. It is illegal on a `uses:` job and kills
     # the workflow at parse time; the reusable sets its own (20 min).
-    uses: hyperpolymath/standards/.github/workflows/hypatia-scan-reusable.yml@bd914b34349a8ad78ba1c4e9919b60b1c9b8bd39
+    uses: hyperpolymath/standards/.github/workflows/hypatia-scan-reusable.yml@7fdc2705df74b4e352d2a1cde3e87a5923fdf329
