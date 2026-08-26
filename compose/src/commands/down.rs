@@ -20,8 +20,7 @@ pub async fn down(
     // Initialize clients
     let svalinn_url = std::env::var("SVALINN_URL")
         .unwrap_or_else(|_| "http://localhost:8080".to_string());
-    let vordr_url = std::env::var("VORDR_URL")
-        .unwrap_or_else(|_| "http://localhost:9090".to_string());
+    let vordr_url = crate::vordr::vordr_url();
     let vordr_mcp_url =
         std::env::var("VORDR_MCP_URL").unwrap_or_else(|_| "http://localhost:8081".to_string());
 
