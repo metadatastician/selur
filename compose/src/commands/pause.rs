@@ -27,8 +27,7 @@ pub async fn pause(
         services
     };
 
-    let vordr_url = std::env::var("VORDR_URL")
-        .unwrap_or_else(|_| "http://localhost:9090".to_string());
+    let vordr_url = crate::vordr::vordr_url();
     let vordr_client = VordrClient::new(vordr_url);
 
     let all_containers = vordr_client.list_containers().await?;
@@ -96,8 +95,7 @@ pub async fn unpause(
         services
     };
 
-    let vordr_url = std::env::var("VORDR_URL")
-        .unwrap_or_else(|_| "http://localhost:9090".to_string());
+    let vordr_url = crate::vordr::vordr_url();
     let vordr_client = VordrClient::new(vordr_url);
 
     let all_containers = vordr_client.list_containers().await?;

@@ -27,8 +27,7 @@ pub async fn wait_cmd(
         services
     };
 
-    let vordr_url = std::env::var("VORDR_URL")
-        .unwrap_or_else(|_| "http://localhost:9090".to_string());
+    let vordr_url = crate::vordr::vordr_url();
     let vordr_client = VordrClient::new(vordr_url);
 
     // Find running containers for the target services
@@ -67,8 +66,7 @@ pub async fn wait_cmd(
     let mut handles = Vec::new();
 
     for (service_name, container_id) in wait_targets {
-        let vordr_url_clone = std::env::var("VORDR_URL")
-            .unwrap_or_else(|_| "http://localhost:9090".to_string());
+        let vordr_url_clone = crate::vordr::vordr_url();
         let client = VordrClient::new(vordr_url_clone);
 
         let handle = tokio::spawn(async move {

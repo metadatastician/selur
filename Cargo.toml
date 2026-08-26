@@ -1,4 +1,13 @@
 # SPDX-License-Identifier: MPL-2.0
+
+# compose/ is a second crate (selur-compose) that was NOT a workspace member,
+# so `cargo build` at the root never touched it and it carried its own
+# Cargo.lock -- two independent dependency resolutions of the same tree.
+# Making it a member gives one lockfile and one `cargo build --workspace`.
+[workspace]
+members = ["compose"]
+resolver = "2"
+
 [package]
 name = "selur"
 version = "0.1.0"

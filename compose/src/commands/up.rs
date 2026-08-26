@@ -264,8 +264,7 @@ pub async fn up(
         println!();
 
         // Stream logs from all deployed containers until interrupted
-        let vordr_url = std::env::var("VORDR_URL")
-            .unwrap_or_else(|_| "http://localhost:9090".to_string());
+        let vordr_url = crate::vordr::vordr_url();
         let vordr_client = crate::vordr::VordrClient::new(vordr_url);
 
         let container_ids: HashMap<String, String> = deployed.clone();

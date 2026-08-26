@@ -4,6 +4,23 @@
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
+/// Default Vörðr REST endpoint.
+///
+/// 9091, NOT 9090. rokur -- a real, shipped, tested service -- defaults to
+/// 9090 (`rokur/config.js:92`), and selur previously defaulted here to the
+/// same port, so running both on one host collided. The vordr REST API this
+/// points at does not exist yet, so of the two defaults this is the one free
+/// to move.
+pub const DEFAULT_VORDR_URL: &str = "http://localhost:9091";
+
+/// Resolve the Vörðr endpoint: `VORDR_URL` if set, else the default above.
+///
+/// Previously this expression was copy-pasted into 19 call sites across 17
+/// files, so changing the default meant finding all of them.
+pub fn vordr_url() -> String {
+    std::env::var("VORDR_URL").unwrap_or_else(|_| DEFAULT_VORDR_URL.to_string())
+}
+
 /// Vörðr HTTP client (or Elixir port protocol)
 pub struct VordrClient {
     base_url: String,

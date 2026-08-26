@@ -29,8 +29,7 @@ pub async fn stop(
     };
 
     // Initialize Vörðr client
-    let vordr_url = std::env::var("VORDR_URL")
-        .unwrap_or_else(|_| "http://localhost:9090".to_string());
+    let vordr_url = crate::vordr::vordr_url();
     let vordr_client = VordrClient::new(vordr_url);
 
     // Get all containers for this project
