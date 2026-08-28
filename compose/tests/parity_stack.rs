@@ -4,11 +4,12 @@ use axum::{
     extract::{Extension, Json, Path},
     http::StatusCode,
     routing::{get, post},
-    Router, Server,
+    Router,
 };
 use serde_json::{json, Value};
 use std::{
     net::SocketAddr,
+    os::unix::fs::PermissionsExt,
     sync::Arc,
 };
 use tokio::{
@@ -17,7 +18,7 @@ use tokio::{
 };
 use tower::ServiceBuilder;
 
-#[tokio::test]
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 async fn parity_stack_acceptance() -> anyhow::Result<()> {
     let containers = Arc::new(Mutex::new(Vec::new()));
     let mcp_calls = Arc::new(Mutex::new(Vec::new()));
@@ -27,19 +28,61 @@ async fn parity_stack_acceptance() -> anyhow::Result<()> {
     let (vordr_addr, vordr_shutdown) = spawn_vordr_http_server(containers.clone()).await?;
     let (mcp_addr, mcp_shutdown) = spawn_vordr_mcp_server(mcp_calls.clone()).await?;
 
-    let compose_file = "examples/parity/compose.toml";
+    // Test scaffolding: `up` shells out to the `ct` (Cerro Torre) binary for
+    // `verify` and opens each service's `.ctp` bundle for `bundle_digest`. Neither
+    // exists in CI, so provide a stub `ct` on PATH plus fixture bundle files in a
+    // hermetic tempdir that doubles as the child's working directory (the product
+    // resolves bundle paths, hence the fixtures, relative to CWD).
+    let workdir = tempfile::tempdir()?;
+    let work = workdir.path().to_path_buf();
 
-    let run_env = |cmd: &mut Command| {
+    let ct_stub = work.join("ct");
+    std::fs::write(&ct_stub, "#!/bin/sh\nexit 0\n")?;
+    std::fs::set_permissions(&ct_stub, std::fs::Permissions::from_mode(0o755))?;
+
+    // Fixture bundles, named to match each service `image` in compose.toml.
+    std::fs::write(work.join("nginx:latest.ctp"), b"parity-nginx-bundle")?;
+    std::fs::write(work.join("redis:latest.ctp"), b"parity-redis-bundle")?;
+
+    // Address the compose file absolutely, since the child runs from the tempdir.
+    let compose_file = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("examples/parity/compose.toml");
+
+    // A closure cannot express the higher-ranked signature
+    // `for<'a> Fn(&'a mut Command) -> &'a mut Command`, so use a function item,
+    // which ties the returned borrow to the input via lifetime elision.
+    fn run_env<'a>(
+        cmd: &'a mut Command,
+        svalinn_addr: SocketAddr,
+        mcp_addr: SocketAddr,
+        workdir: &std::path::Path,
+    ) -> &'a mut Command {
         cmd.env("SVALINN_URL", format!("http://{}", svalinn_addr));
         cmd.env("VORDR_MCP_URL", format!("http://{}", mcp_addr));
+        // Put the stub `ct` (living in `workdir`) first on PATH, and run the child
+        // from `workdir` so the `.ctp` bundle fixtures resolve as the relative
+        // paths that `up` opens.
+        cmd.env(
+            "PATH",
+            format!(
+                "{}:{}",
+                workdir.display(),
+                std::env::var("PATH").unwrap_or_default()
+            ),
+        );
+        cmd.current_dir(workdir);
         cmd
-    };
+    }
 
     run_env(
         &mut Command::cargo_bin("selur-compose")?
             .arg("-f")
-            .arg(compose_file)
-            .arg("up"),
+            .arg(&compose_file)
+            .arg("up")
+            .arg("-d"),
+        svalinn_addr,
+        mcp_addr,
+        &work,
     )
     .assert()
     .success();
@@ -47,10 +90,13 @@ async fn parity_stack_acceptance() -> anyhow::Result<()> {
     run_env(
         &mut Command::cargo_bin("selur-compose")?
             .arg("-f")
-            .arg(compose_file)
+            .arg(&compose_file)
             .arg("down")
             .arg("-v")
             .env("VORDR_URL", format!("http://{}", vordr_addr)),
+        svalinn_addr,
+        mcp_addr,
+        &work,
     )
     .assert()
     .success();
@@ -122,22 +168,25 @@ async fn spawn_vordr_http_server(
     let app = Router::new()
         .route(
             "/api/v1/containers",
-            get(move || {
+            get({
                 let containers = containers.clone();
-                async move {
-                    let list: Vec<Value> = {
-                        let guard = containers.lock().await;
-                        guard
-                            .iter()
-                            .map(|id| {
-                                json!({
-                                    "container_id": id,
-                                    "state": "running"
+                move || {
+                    let containers = containers.clone();
+                    async move {
+                        let list: Vec<Value> = {
+                            let guard = containers.lock().await;
+                            guard
+                                .iter()
+                                .map(|id| {
+                                    json!({
+                                        "container_id": id,
+                                        "state": "running"
+                                    })
                                 })
-                            })
-                            .collect()
-                    };
-                    (StatusCode::OK, Json(Value::Array(list)))
+                                .collect()
+                        };
+                        (StatusCode::OK, Json(Value::Array(list)))
+                    }
                 }
             }),
         )
@@ -183,7 +232,9 @@ async fn spawn_router(
     let listener = TcpListener::bind(("127.0.0.1", 0)).await?;
     let addr = listener.local_addr()?;
     let (shutdown_tx, shutdown_rx) = oneshot::channel();
-    let server = axum::Server::from_tcp(listener)?
+    // `axum::Server::from_tcp` (re-exported from hyper) takes a `std::net::TcpListener`;
+    // `tokio::net::TcpListener::into_std` yields one that is already in non-blocking mode.
+    let server = axum::Server::from_tcp(listener.into_std()?)?
         .serve(app.into_make_service())
         .with_graceful_shutdown(async {
             let _ = shutdown_rx.await;
