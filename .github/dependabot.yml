@@ -1,6 +1,10 @@
 # SPDX-License-Identifier: MPL-2.0
 # Dependabot configuration for RSR-compliant repositories
-# Covers common ecosystems - remove unused ones for your project
+# Trimmed to the ecosystems present at the repo root. selur is a Rust/Cargo
+# workspace (root Cargo.toml). The mix/deno manifests in this repo live only
+# under integrations/ (vendored sub-projects, not selur's own dependencies)
+# and are intentionally unmanaged. mix/npm/pip/nix declared at "/" had no
+# root manifest and only produced red "Dependabot Updates" runs.
 
 version: 2
 updates:
@@ -14,38 +18,14 @@ updates:
         patterns:
           - "*"
 
-  # Rust/Cargo
+  # Rust/Cargo (root workspace manifest)
   - package-ecosystem: "cargo"
     directory: "/"
     schedule:
       interval: "weekly"
     # `open-pull-requests-limit: 0` suppresses routine version-update PRs
     # while leaving Dependabot SECURITY PRs flowing. The previous
-    # `ignore: "*" patch` rule also silenced security PRs under GitHub\'s
+    # `ignore: "*" patch` rule also silenced security PRs under GitHub's
     # current Dependabot behaviour. See rsr-template-repo commit 78b050e
     # and 007-lang/audits/audit-dependabot-automation-gap-2026-04-17.md.
     open-pull-requests-limit: 0
-
-  # Elixir/Mix
-  - package-ecosystem: "mix"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-
-  # Node.js/npm
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-
-  # Python/pip
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-
-  # Nix flakes
-  - package-ecosystem: "nix"
-    directory: "/"
-    schedule:
-      interval: "weekly"
