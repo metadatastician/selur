@@ -30,6 +30,11 @@ jobs:
           mode: report
           path: .
           output: results.sarif
+          # The action's own default image digest was garbage-collected by GHCR
+          # (untagged manifest → "manifest unknown", docker exit 125). Pin a
+          # live, tag-backed digest (:sha-5e54cc9 = :latest, both HTTP 200) so
+          # the container runs. Action ref is unchanged → behaviour-preserving.
+          image: ghcr.io/hyperpolymath/oikos@sha256:aa2b409a313f9e1c67cb1d56cabc5ef087af0da39ab2767fefd196f383ed1888
 
       - name: Upload SARIF to GitHub Security
         if: always()
