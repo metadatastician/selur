@@ -11,11 +11,12 @@ name: Labels
 # jq is preinstalled on GitHub runners; PyYAML is not, which is why the payload
 # is JSON rather than YAML.
 #
-# ⚠ NO `uses:` ANYWHERE, DELIBERATELY. The estate enforces
-# .github/workflows/actions.lock, which is keyed BY WORKFLOW PATH: a workflow
-# the lock does not list is rejected before any step runs (startup_failure, and
-# therefore no check run at all). A dispatched workflow lands in repos whose
-# lock has not been regenerated, so it must not depend on any action.
+# ⚠ NO `uses:` ANYWHERE, DELIBERATELY. This workflow relies only on tools
+# preinstalled on the runner (`gh`, `jq`, `base64`), so it has no action pin or
+# lockfile entry that can fail resolution at startup. Actions are the part of a
+# workflow that can break before any step runs; avoiding them keeps this
+# automation working during an action or lockfile outage elsewhere in the
+# estate.
 
 on:
   workflow_dispatch:
